@@ -8,83 +8,101 @@ not allow names with certain chars, the second set of macros makes subtle visual
 that are compatible with [Windows] filesystems. The effect is no more ugly "_" in file names for tag chars as "/", "*", "?",
 "&" or double quotes.
 
-© Avi Alkalay
+© Avi Alkalay | modified by yuzvir
 freely distributable
-
 )
 
-$set(date,$if2(%originaldate%,%date%))
+$noop(★ Organize artist by alphabetical folders excluding leading The ★)
+$set(albumartist,$if($eq($left(%albumartist%,4),The ),%albumartistsort%,%albumartist%))
 
-$noop(★ Typography for tags: changes will affect tags on media headers [and on what you see in players] ★)
+$noop(########## TAG CLEANUP  ####################################)
 
-$noop(★ ...➡…)
-$set(title,$replace(%title%,...,…))
+$noop(★ Typography for tags: changes will affect tags on media ★)
+
+$noop(★ ... ➡ …)
 $set(album,$replace(%album%,...,…))
+$set(title,$replace(%title%,...,…))
 $set(discsubtitle,$replace(%discsubtitle%,...,…))
 
-$noop(★ No.➡№)
+$noop(★ No. ➡ №)
+$set(album,$replace(%album%, [Nn]o.\\s*\(\\d\), №\\1))
 $set(title,$rreplace(%title%, [Nn]o.\\s*\(\\d\), №\\1))
-$set(album,$rreplace(%album%, [Nn]o.\\s*\(\\d\), №\\1))
-$set(discsubtitle,$rreplace(%discsubtitle%, [Nn]o.\\s*\(\\d\), №\\1))
-
-$noop(★ Nos.➡№)
-$set(title,$rreplace(%title%, [Nn]os.\\s*\(\\d\), №\\1))
-$set(album,$rreplace(%album%, [Nn]os.\\s*\(\\d\), №\\1))
-$set(discsubtitle,$rreplace(%discsubtitle%, [Nn]os.\\s*\(\\d\), №\\1))
+$set(discsubtitle,$replace(%discsubtitle%, [Nn]o.\\s*\(\\d\), №\\1))
 
 $noop(★ [digit]" ➡ [digit]″)
-$set(title,$rreplace(%title%,\(\\d\)",\\1″))
 $set(album,$rreplace(%album%,\(\\d\)",\\1″))
 $set(discsubtitle,$rreplace(%discsubtitle%,\(\\d\)",\\1″))
 
 $noop(★ "something" ➡ “something”)
-$set(title,$rreplace(%title%,"\(.*?\)",“\\1”))
-$set(album,$rreplace(%album%,"\(.*?\)",“\\1”))
-$set(discsubtitle,$rreplace(%discsubtitle%,"\(.*?\)",“\\1”))
-$set(artist,$rreplace(%artist%,"\(.*?\)",“\\1”))
 $set(albumartist,$rreplace(%albumartist%,"\(.*?\)",“\\1”))
+$set(artist,$rreplace(%artist%,"\(.*?\)",“\\1”))
+$set(albumartistsort,$rreplace(%albumartistsort%,"\(.*?\)",“\\1”))
+$set(artistsort,$rreplace(%artistsort%,"\(.*?\)",“\\1”))
+$set(album,$rreplace(%album%,"\(.*?\)",“\\1”))
+$set(title,$rreplace(%title%,"\(.*?\)",“\\1”))
+$set(discsubtitle,$rreplace(%discsubtitle%,"\(.*?\)",“\\1”))
 
 
-$noop(★ Typography on file naming only [for Windows compatibility] ★)
+$noop(★ Typography on file naming only ★)
 
 $set(_titleForFilename,%title%)
 $set(_albumForFilename,%album%)
 $set(_discsubtitleForFilename,%discsubtitle%)
 $set(_albumartistForFilename,%albumartist%)
 $set(_artistForFilename,%artist%)
+$set(_albumartistsortForFilename,%albumartistsort%)
+$set(_artistsortForFilename,%artistsort%)
 
-
-$noop(★ #➡♯)
+$noop(★ # ➡ ♯)
 $set(_titleForFilename,$replace(%_titleForFilename%,#,♯))
 $set(_albumForFilename,$replace(%_albumForFilename%,#,♯))
 $set(_discsubtitleForFilename,$replace(%_discsubtitleForFilename%,#,♯))
 
-$noop(★ :➡∶)
+$noop(★ : ➡ ∶)
 $set(_titleForFilename,$replace(%_titleForFilename%,:,∶))
 $set(_albumForFilename,$replace(%_albumForFilename%,:,∶))
 $set(_discsubtitleForFilename,$replace(%_discsubtitleForFilename%,:,∶))
 $set(_artistForFilename,$replace(%_artistForFilename%,:,∶))
 $set(_albumartistForFilename,$replace(%_albumartistForFilename%,:,∶))
+$set(_artistsortForFilename,$replace(%_artistsortForFilename%,:,∶))
+$set(_albumartistsortForFilename,$replace(%_albumartistsortForFilename%,:,∶))
 
-$noop(★ ?➡⁇)
-$set(_titleForFilename,$replace(%_titleForFilename%,?,⁇))
-$set(_albumForFilename,$replace(%_albumForFilename%,?,⁇))
-$set(_discsubtitleForFilename,$replace(%_discsubtitleForFilename%,?,⁇))
-$set(_artistForFilename,$replace(%_artistForFilename%,?,⁇))
+$noop(★ " ➡ '')
+$set(_releaseType,$replace(%releasetype%,",''))
+$set(_media,$replace(%media%,",''))
 
+$set(_titleForFilename,$replace(%_titleForFilename%,",''))
+$set(_albumForFilename,$replace(%_albumForFilename%,",''))
+$set(_discsubtitleForFilename,$replace(%_discsubtitleForFilename%,",''))
+$set(_artistForFilename,$replace(%_artistForFilename%,",''))
+$set(_albumartistForFilename,$replace(%_albumartistForFilename%,",''))
+$set(_artistsortForFilename,$replace(%_artistsortForFilename%,",''))
+$set(_albumartistsortForFilename,$replace(%_albumartistsortForFilename%,",''))
+
+$noop(★ ? ➡ ？)
+$set(_titleForFilename,$replace(%_titleForFilename%,?,？))
+$set(_albumForFilename,$replace(%_albumForFilename%,?,？))
+$set(_discsubtitleForFilename,$replace(%_discsubtitleForFilename%,?,？))
+$set(_artistForFilename,$replace(%_artistForFilename%,?,？))
+$set(_artistsortForFilename,$replace(%_artistsortForFilename%,?,？))
+
+$noop(★ / ➡ ／)
+$noop(other unicode slash - ⁄  ⁄  ∕ ╱ ／)
 $set(_titleForFilename,$replace(%_titleForFilename%,/,／))
 $set(_albumForFilename,$replace(%_albumForFilename%,/,／))
 $set(_discsubtitleForFilename,$replace(%_discsubtitleForFilename%,/,／))
 $set(_artistForFilename,$replace(%_artistForFilename%,/,／))
 $set(_albumartistForFilename,$replace(%_albumartistForFilename%,/,／))
+$set(_artistsortForFilename,$replace(%_artistsortForFilename%,/,／))
+$set(_albumartistsortForFilename,$replace(%_albumartistsortForFilename%,/,／))
 
 $set(_titleForFilename,$replace(%_titleForFilename%,\\,＼))
 $set(_albumForFilename,$replace(%_albumForFilename%,\\,＼))
 $set(_discsubtitleForFilename,$replace(%_discsubtitleForFilename%,\\,＼))
 
-$set(_titleForFilename,$replace(%_titleForFilename%,|,￨))
-$set(_albumForFilename,$replace(%_albumForFilename%,|,￨))
-$set(_discsubtitleForFilename,$replace(%_discsubtitleForFilename%,|,￨))
+$set(_titleForFilename,$replace(%_titleForFilename%,|,｜))
+$set(_albumForFilename,$replace(%_albumForFilename%,|,｜))
+$set(_discsubtitleForFilename,$replace(%_discsubtitleForFilename%,|,｜))
 
 $set(_titleForFilename,$replace(%_titleForFilename%,>,＞))
 $set(_albumForFilename,$replace(%_albumForFilename%,>,＞))
@@ -99,10 +117,13 @@ $set(_albumForFilename,$replace(%_albumForFilename%,*,✱))
 $set(_discsubtitleForFilename,$replace(%_discsubtitleForFilename%,*,✱))
 $set(_artistForFilename,$replace(%_artistForFilename%,*,✱))
 $set(_albumartistForFilename,$replace(%_albumartistForFilename%,*,✱))
-
+$set(_artistsortForFilename,$replace(%_artistsortForFilename%,*,✱))
+$set(_albumartistsortForFilename,$replace(%_albumartistsortForFilename%,*,✱))
 
 $set(_titleForFilename,$replace(%_titleForFilename%,&,＆))
 $set(_albumForFilename,$replace(%_albumForFilename%,&,＆))
 $set(_discsubtitleForFilename,$replace(%_discsubtitleForFilename%,&,＆))
 $set(_artistForFilename,$replace(%_artistForFilename%,&,＆))
 $set(_albumartistForFilename,$replace(%_albumartistForFilename%,&,＆))
+$set(_artistsortForFilename,$replace(%_artistsortForFilename%,&,＆))
+$set(_albumartistsortForFilename,$replace(%_albumartistsortForFilename%,&,＆))

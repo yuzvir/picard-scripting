@@ -5,6 +5,36 @@ You provide Picard with your MP3s, FLACs, M4As etc, it will recognize the music 
 
 Picard can be scripted and these are my personal configurations. They do the following:
 
-* Rename the files according to the tags in a coherent ARTIST/ALBUM_WITH_YEAR/TRACK filesystem structure.
 * Change non-filesystem-friendly chars on filenames into filesystem-friendly ones using Unicode. For example: #➡♯, :➡∶, /➡／, *➡✱ etc
+
 * Correctly handle release date versus original release date, number of discs etc
+
+
+## Folder Structure ##
+
+* (ALBUM_ARTIST | Various Artists)/
+	* (Albums | Live | Singles & EPs | Compilations | Others)/
+		* ORIGINAL_YEAR - [LABEL]* ALBUM (RELEASE_YEAR)* [RELEASE_INFO] [CATALOG_ID] [AUDIO_QUALITY] {INCOMPLETE}*/
+			* (Disc | CD) DISC_NUMBER - DISC_SUBTITLE/*
+				* TRACK_NUMBER - TRACK_ARTIST - TITLE
+
+Example:
+
+Coil/Albums/2003 - ANS (2004) [Official, CD, Album] [THRESHOLD1] [MP3 256@44k]/CD1/01 - Coil - [untitled].mp3
+
+Notes:
+
+* Release type folder (Albums, Live, etc.) wouldn't be created for Various Artists
+
+* LABEL will be added only for Various Artists albums
+
+* RELEASE_YEAR will be added only if it differs from ORIGINAL_YEAR
+
+* {INCOMPLETE} will be added only if album doesn't have all tracks
+
+* DISC_SUBTITLE - will be added only if it exists
+
+* Disc folder will be created for multidiscs albums
+
+
+

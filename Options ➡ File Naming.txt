@@ -1,33 +1,201 @@
-$noop(© Avi Alkalay: freely distributable)
+$noop(★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★)
+$noop(★ MusicBrainz Picard Renaming Script by yuzvir                         ★)
+$noop(★ [ based on avibrazil and Ski-lleR scripts ]                          ★)
+$noop(★                                                                      ★)
+$noop(★ Thanks to                                                            ★)
+$noop(★                                                                      ★)
+$noop(★ avibrazil for his filter                                             ★)
+$noop(★ > https://github.com/avibrazil/picard-scripting                      ★)
+$noop(★ Ski-lleR for his renaming script                                     ★)
+$noop(★ > https://github.com/Ski-lleR/Snippets/tree/master/Media             ★)
+$noop(★                                                                      ★)
+$noop(★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★)
 
-$noop(Please uncheck "Replace non-ASCII characters" and "Replace Windows-incompatible characters")
+$noop(######################### SETTINGS #########################)
 
-$noop(★★★★★ if you want to organize by genres, remove this line
-	$if(%genre%,
-		%genre%/,
-	)
-if you want to organize by genres, remove this line too ★★★★★)
+$noop(★ Multi-Disc ★)
+$set(_nameForTypeCD,CD)
+$set(_nameForTypeVinyl,Disc )
 
-$set(_discFolder,1)
+$noop(★ CUSTOM SUBFOLDER BY TYPE ★)
+$set(_albumSubFolder,Albums/)
+$set(_liveSubFolder,Live/)
+$set(_singlesSubFolder,Singles & EPs/)
+$set(_epSubFolder,Singles & EPs/)
+$set(_broadcastSubFolder,Broadcasts/)
+$set(_compilationsSubFolder,Compilations/)
+$set(_otherSubFolder,Others/)
 
-$if($eq($left($lower(%_albumartistForFilename%),4),the ),
-	$right(%_albumartistForFilename%, $sub($len(%_albumartistForFilename%),4)),
-	%_albumartistForFilename%
-)/
+$noop(★ SOUNDTRACK/VARIOUS FOLDER ★)
+$set(_soundTracksFolder,Soundtrack/)
+$set(_variousArtistsFolder,Various/)
+$set(_incompleteFolder,Incomplete/)
 
-$if($if2(%originaldate%,%date%),
-	$left($if2(%originaldate%,%date%),4) • ,
+$noop(####################### END SETTINGS #######################)
+
+
+$noop(########## DETECT MUSIC TYPE ###############################)
+
+$noop(★ Detect Album ★)
+$if($in(%releasetype%,album),
+  $set(_isAlbum,1)
 )
-%_albumForFilename%/
+
+$noop(★ Detect Single ★)
+$if($in(%releasetype%,single),
+  $set(_isSingle,1)
+)
+
+$noop(★ Detect EP ★)
+$if($in(%releasetype%,ep),
+  $set(_isEP,1)
+)
+
+$noop(★ Detect Broadcast ★)
+$if($in(%releasetype%,broadcast),
+  $set(_isBroadcast,1)
+)
+
+$noop(★ Detect Other ★)
+$if($in(%releasetype%,other),
+  $set(_isOther,1)
+)
+
+$noop(★ Detect Artist Compilation ★)
+$if($in(%releasetype%,compilation),
+  $set(_isArtistCompil,1)
+)
+
+$noop(★ Detect Live ★)
+$if($in(%releasetype%,live),
+  $set(_isLive,1)
+)
+
+$noop(★ Detect Soundtrack ★)
+$if($in(%releasetype%,soundtrack),
+  $set(_isSoundTrack,1)
+)
+$noop(★ Detect Incomplete ★)
+$if($eq($is_complete(),0),
+  $set(_isIncomplete,1)
+)
+
+$noop(★ Detect Various Artist ★)
+$if($eq(%albumartist%,Various Artists),
+  $set(_isVarious,1)
+)
+
+$noop(★ Re-detect Compilation ★)
+$if($eq(%compilation%,1),
+  $set(_isGlobalCompil,1)
+)
+
+$noop(########## SET OTHER FLAGS ###############################)
 
 $if($gt(%totaldiscs%,1),
-	$num(%discnumber%,2)
-	$if(%_discFolder%,
-		$if(%_discsubtitleForFilename%, %_discsubtitleForFilename%/, disc/),
-		·
-	)
+  $set(_isMultiDisc,1)
 )
-	
 
-$num(%tracknumber%,2) $if($not($eq(%artist%,%albumartist%)),%_artistForFilename% ♫ )%_titleForFilename%
-$noop($num(%tracknumber%,2) %_titleForFilename%)
+$if($in(%media%,Vinyl),
+  $set(_isVinyl,1)
+)
+
+$noop(########## general tag variables ####################################)
+
+$noop(--- artist folder ---)
+$setmulti(_genre,$lower(%genre%),separator="\, ")
+$set(_genre,$replace(%_genre%,;,\,))
+$set(_genre,$title(%_genre%))
+$set(_albumArtistFolder,$if2(%_albumartistsortForFilename%,%_artistsortForFilename%))
+$noop(-- do not add genre: $if(%_genre%,$set(_albumArtistFolder,%_albumArtistFolder% \(%_genre%\))))
+$set(_albumArtistFolder,%_albumArtistFolder%/)
+$set(_albumArtistFolder,$if(%_isVarious%,%_albumartistsortForFilename%/,%_albumArtistFolder%))
+
+$noop(--- release type folder ---)
+$if(%_isAlbum%,$set(_releaseFolder,%_albumSubFolder%))
+$if(%_isLive%,$set(_releaseFolder,%_liveSubFolder%))
+$if(%_isSingle%,$set(_releaseFolder,%_singlesSubFolder%))
+$if(%_isEP%,$set(_releaseFolder,%_epSubFolder%))
+$if(%_isBroadcast%,$set(_releaseFolder,%_broadcastSubFolder%))
+$if(%_isOther%,$set(_releaseFolder,%_otherSubFolder%))
+$if(%_isArtistCompil%,$set(_releaseFolder,%_compilationsSubFolder%))
+$if(%_isGlobalCompil%,$set(_releaseFolder,%_compilationsSubFolder%))
+$set(_releaseFolder,$if2(%_releaseFolder%,%_otherSubFolder%))
+$set(_releaseFolder,$if(%_isVarious%,,%_releaseFolder%))
+
+$noop(--- album folder [audio quality part] ---)
+$if($eq(%_bitrate%,320.0),$set(_folderBitrateC,320))
+$if($eq(%_bitrate%,256.0),$set(_folderBitrateC,256))
+$if($eq(%_bitrate%,192.0),$set(_folderBitrateC,192))
+$if($eq(%_bitrate%,160.0),$set(_folderBitrateC,160))
+$if($eq(%_bitrate%,128.0),$set(_folderBitrateC,128))
+$if($eq(%_bitrate%,64.0),$set(_folderBitrateC,64))
+$set(_numbr,$div(%_bitrate%,1000))
+$if($gte(%_numbr%,220),$set(_folderBitrateV,V0))
+$if($lt(%_numbr%,220),$set(_folderBitrateV,V2))
+$set(_folderBitrate,$if2(%_folderBitrateC%,%_folderBitrateV%))
+$set(_sampleRate,$if(%_sample_rate%,$div(%_sample_rate%,1000)))
+$set(_audioQualityPart1,%_folderBitrate%)
+$set(_audioQualityPart2,%_sampleRate%)
+$if($and(%_audioQualityPart1%,%_audioQualityPart2%),$set(_audioQualityNext, %_audioQualityPart1%@%_audioQualityPart2%k))
+$if($and($not(%_audioQualityPart1%),%_audioQualityPart2%),$set(_audioQualityNext, %_audioQualityPart2%k))
+$if($and(%_audioQualityPart1%,$not(%_audioQualityPart2%)),$set(_audioQualityNext, %_audioQualityPart1%))
+$set(_audioQuality,$upper(%_extension%)%_audioQualityNext%)
+
+$noop(--- album folder [original year part] ---)
+$set(_originalAlbumDateValue,$if2(%originalyear%,%originaldate%,%date%))
+$set(_anyAlbumDateValue,$if2(%date%,%originalyear%,%originaldate%))
+$set(_albumYear,$if(%_anyAlbumDateValue%,$left(%_anyAlbumDateValue%,4),0000))
+$set(_originalAlbumYear,$if(%_originalAlbumDateValue%,$left(%_originalAlbumDateValue%,4),0000))
+
+$noop(--- album folder [catalog number part] ---)
+$set(_catalogNumber,$if($eq(%catalognumber%,[none]),none,%catalognumber%))
+$set(_catalogNumber,$if(%_catalogNumber%,%_catalogNumber%,none))
+
+$noop(--- album folder [media type / release info part] ---)
+$set(_numOfFiles,$if2(%_totalalbumtracks%,%totaltracks%))
+$set(_mediaType,%releasestatus%)
+$set(_mediaTypeNext,$if(%_media%,\, %_media%))
+$set(_mediaType,%_mediaType%%_mediaTypeNext%)
+$set(_mediaTypeNext,$if(%_releaseType%,\, %_releaseType%))
+$set(_mediaType,%_mediaType%%_mediaTypeNext%)
+$set(_mediaType,$if(%_mediaType%,%_mediaType%,none))
+$set(_mediaType,$replace(%_mediaType%,;,\,))
+$set(_mediaType,$title(%_mediaType%))
+
+$noop(--- album folder [label part used for VA only] ---)
+$set(_label,$replace(%label%,;,\,))
+$set(_labelTag,$if(%label%,[%label%] - ))
+$set(_labelTagIfVA,$if(%_isVarious%,%_labelTag%))
+
+$noop(--- album folder [add INCOMPLETE to the end of album name] ---)
+$set(_incompleteTag,$if(%_isIncomplete%, {INCOMPLETE}))
+
+$noop(--- album folder [reIssue date part] ---)
+$set(_reIssueYear,$if($ne(%_originalAlbumYear%,%_albumYear%), \(%_albumYear%\)))
+
+$noop(--- album folder structure ---)
+$set(_albumFolder,%_originalAlbumYear% - %_labelTagIfVA%%_albumForFilename%%_reIssueYear% [%_mediaType%] [%_catalogNumber%] [%_audioQuality%]%_incompleteTag%/)
+
+$noop(--- disc folder [only for multidiscs releases] ---)
+$set(_discSubtitleOrEmpty,$if(%discsubtitle%, - %_discsubtitleForFilename%))
+$set(_discNumberPadded,$if(%discnumber%,$num(%discnumber%,2)))
+$set(_discNumber,$if(%discnumber%,$if($lt(%totaldiscs%,10),%discnumber%,%_discNumberPadded%)))
+$set(_nameForDiscMediaType,$if(%_isVinyl%,%_nameForTypeVinyl%,%_nameForTypeCD%))
+$set(_discFolderOrEmpty,$if(%_isMultiDisc%,%_nameForDiscMediaType%%_discNumber%%_discSubtitleOrEmpty%/))
+
+$noop(--- filename ---)
+$set(_trackNumberPadded,$if(%tracknumber%,$num(%tracknumber%,2),00))
+$noop($set(_trackNumber,$if(%_musicbrainz_tracknumber%,%_musicbrainz_tracknumber%,%_trackNumberPadded%)))
+$set(_trackNumber,%_trackNumberPadded%)
+$set(_trackNumberOrEmpty,$if(%_trackNumber%,%_trackNumber% - ))
+$set(_artistForFilenameOrEmpty,$if(%_artistForFilename%,%_artistForFilename% - ))
+$set(_fileName,%_trackNumberOrEmpty%%_artistForFilenameOrEmpty%%_titleForFilename%)
+
+$noop(########## FOLDERS STRUCTURE ####################################)
+
+%_albumArtistFolder%
+%_releaseFolder%
+%_albumFolder%
+%_discFolderOrEmpty%
+%_fileName%
