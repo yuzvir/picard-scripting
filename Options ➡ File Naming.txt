@@ -14,8 +14,10 @@ $noop(★★★★★★★★★★★★★★★★★★★★★★★★�
 $noop(######################### SETTINGS #########################)
 
 $noop(★ Multi-Disc ★)
-$set(_nameForTypeCD,CD)
+$set(_nameForTypeCD,CD )
 $set(_nameForTypeVinyl,Disc )
+
+$set(_prefixForUnofficial,Unofficial )
 
 $noop(★ CUSTOM SUBFOLDER BY TYPE ★)
 $set(_albumSubFolder,Albums/)
@@ -25,6 +27,7 @@ $set(_epSubFolder,Singles & EPs/)
 $set(_broadcastSubFolder,Broadcasts/)
 $set(_compilationsSubFolder,Compilations/)
 $set(_otherSubFolder,Others/)
+$set(_promoSubFolder,Promos/)
 
 $noop(★ SOUNDTRACK/VARIOUS FOLDER ★)
 $set(_soundTracksFolder,Soundtrack/)
@@ -37,42 +40,42 @@ $noop(####################### END SETTINGS #######################)
 $noop(########## DETECT MUSIC TYPE ###############################)
 
 $noop(★ Detect Album ★)
-$if($in(%releasetype%,album),
+$if($in($lower(%releasetype%),album),
   $set(_isAlbum,1)
 )
 
 $noop(★ Detect Single ★)
-$if($in(%releasetype%,single),
+$if($in($lower(%releasetype%),single),
   $set(_isSingle,1)
 )
 
 $noop(★ Detect EP ★)
-$if($in(%releasetype%,ep),
+$if($in($lower(%releasetype%),ep),
   $set(_isEP,1)
 )
 
 $noop(★ Detect Broadcast ★)
-$if($in(%releasetype%,broadcast),
+$if($in($lower(%releasetype%),broadcast),
   $set(_isBroadcast,1)
 )
 
 $noop(★ Detect Other ★)
-$if($in(%releasetype%,other),
+$if($in($lower(%releasetype%),other),
   $set(_isOther,1)
 )
 
 $noop(★ Detect Artist Compilation ★)
-$if($in(%releasetype%,compilation),
+$if($in($lower(%releasetype%),compilation),
   $set(_isArtistCompil,1)
 )
 
 $noop(★ Detect Live ★)
-$if($in(%releasetype%,live),
+$if($in($lower(%releasetype%),live),
   $set(_isLive,1)
 )
 
 $noop(★ Detect Soundtrack ★)
-$if($in(%releasetype%,soundtrack),
+$if($in($lower(%releasetype%),soundtrack),
   $set(_isSoundTrack,1)
 )
 $noop(★ Detect Incomplete ★)
@@ -81,7 +84,15 @@ $if($eq($is_complete(),0),
 )
 
 $noop(★ Detect Various Artist ★)
-$if($eq(%albumartist%,Various Artists),
+$if($eq($lower(%albumartist%),various artists),
+  $set(_isVarious,1)
+)
+
+$if($eq($lower(%albumartist%),various artist),
+  $set(_isVarious,1)
+)
+
+$if($eq($lower(%albumartist%),va),
   $set(_isVarious,1)
 )
 
@@ -96,9 +107,26 @@ $if($gt(%totaldiscs%,1),
   $set(_isMultiDisc,1)
 )
 
-$if($in(%media%,Vinyl),
+$if($in($lower(%media%),vinyl),
   $set(_isVinyl,1)
 )
+
+$if($in($lower(%releasestatus%),bootleg),
+  $set(_isBootleg,1)
+)
+
+$if($in($lower(%releasestatus%),official),
+  $set(_isOfficial,1)
+)
+
+$if($in($lower(%releasestatus%),pseudo-release),
+  $set(_isOfficial,1)
+)
+
+$if($in($lower(%releasestatus%),promo),
+  $set(_isPromo,1)
+)
+
 
 $noop(########## general tag variables ####################################)
 
@@ -120,6 +148,8 @@ $if(%_isBroadcast%,$set(_releaseFolder,%_broadcastSubFolder%))
 $if(%_isOther%,$set(_releaseFolder,%_otherSubFolder%))
 $if(%_isArtistCompil%,$set(_releaseFolder,%_compilationsSubFolder%))
 $if(%_isGlobalCompil%,$set(_releaseFolder,%_compilationsSubFolder%))
+$if($and(%_isBootleg%,%_releaseFolder%),$set(_releaseFolder,%_prefixForUnofficial%%_releaseFolder%))
+$set(_releaseFolder,$if(%_isPromo%,%_promoSubFolder%,%_releaseFolder%))
 $set(_releaseFolder,$if2(%_releaseFolder%,%_otherSubFolder%))
 $set(_releaseFolder,$if(%_isVarious%,,%_releaseFolder%))
 
@@ -154,14 +184,16 @@ $set(_catalogNumber,$if(%_catalogNumber%,%_catalogNumber%,none))
 
 $noop(--- album folder [media type / release info part] ---)
 $set(_numOfFiles,$if2(%_totalalbumtracks%,%totaltracks%))
-$set(_mediaType,%releasestatus%)
-$set(_mediaTypeNext,$if(%_media%,\, %_media%))
-$set(_mediaType,%_mediaType%%_mediaTypeNext%)
-$set(_mediaTypeNext,$if(%_releaseType%,\, %_releaseType%))
-$set(_mediaType,%_mediaType%%_mediaTypeNext%)
-$set(_mediaType,$if(%_mediaType%,%_mediaType%,none))
+$set(_mediaType,%_media%)
+
+$if(%_releaseType%,$set(_mediaType,%_mediaType%\, %_releaseType%))
 $set(_mediaType,$replace(%_mediaType%,;,\,))
 $set(_mediaType,$title(%_mediaType%))
+$set(_mediaType,$trim(%_mediaType%))
+$set(_mediaType,$trim(%_mediaType%,\,))
+$set(_mediaType,$trim(%_mediaType%))
+$set(_mediaType,$replace(%_mediaType%,Ep,EP))
+$set(_mediaType,$replace(%_mediaType%,Cd,CD))
 
 $noop(--- album folder [label part used for VA only] ---)
 $set(_label,$replace(%label%,;,\,))
@@ -179,8 +211,7 @@ $set(_albumFolder,%_originalAlbumYear% - %_labelTagIfVA%%_albumForFilename%%_reI
 
 $noop(--- disc folder [only for multidiscs releases] ---)
 $set(_discSubtitleOrEmpty,$if(%discsubtitle%, - %_discsubtitleForFilename%))
-$set(_discNumberPadded,$if(%discnumber%,$num(%discnumber%,2)))
-$set(_discNumber,$if(%discnumber%,$if($lt(%totaldiscs%,10),%discnumber%,%_discNumberPadded%)))
+$set(_discNumber,$if(%discnumber%,$num(%discnumber%,2)))
 $set(_nameForDiscMediaType,$if(%_isVinyl%,%_nameForTypeVinyl%,%_nameForTypeCD%))
 $set(_discFolderOrEmpty,$if(%_isMultiDisc%,%_nameForDiscMediaType%%_discNumber%%_discSubtitleOrEmpty%/))
 

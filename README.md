@@ -13,7 +13,7 @@ Picard can be scripted and these are my personal configurations. They do the fol
 ## Folder Structure ##
 
 * (ALBUM_ARTIST | Various Artists)/
-	* (Albums | Live | Singles & EPs | Compilations | Others)/
+	* (Unofficial* Albums | Live | Singles & EPs | Compilations | Promos | Others)/
 		* ORIGINAL_YEAR - [LABEL]* ALBUM (RELEASE_YEAR)* [RELEASE_INFO] [CATALOG_ID] [AUDIO_QUALITY] {INCOMPLETE}*/
 			* (Disc | CD) DISC_NUMBER - DISC_SUBTITLE/*
 				* TRACK_NUMBER - TRACK_ARTIST - TITLE
@@ -24,16 +24,12 @@ Coil/Albums/2003 - ANS (2004) [Official, CD, Album] [THRESHOLD1] [MP3 256@44k]/C
 
 Notes:
 
-* Release type folder (Albums, Live, etc.) wouldn't be created for Various Artists
-
+* Release folder (Albums, Live, etc.) wouldn't be created for Various Artists
+* if RELEASETYPE is set to 'bootleg' release folder will be changed to Unoffical Albums, Unoffical Singles & EPs, etc.
 * LABEL will be added only for Various Artists albums
-
 * RELEASE_YEAR will be added only if it differs from ORIGINAL_YEAR
-
 * {INCOMPLETE} will be added only if album doesn't have all tracks
-
 * DISC_SUBTITLE - will be added only if it exists
-
 * Disc folder will be created for multidiscs albums
 
 
