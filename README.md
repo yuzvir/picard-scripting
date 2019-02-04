@@ -20,7 +20,7 @@ Picard can be scripted and these are my personal configurations. They do the fol
 
 Example:
 
-Coil/Albums/2003 - ANS (2004) [Official, CD, Album] [THRESHOLD1] [MP3 256@44k]/CD1/01 - Coil - [untitled].mp3
+Coil/Albums/2003 - ANS (2004) [CD, Album] [THRESHOLD1] [MP3 256@44k]/CD 01/01 - Coil - [untitled].mp3
 
 Notes:
 
