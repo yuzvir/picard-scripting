@@ -5,7 +5,7 @@ You provide Picard with your MP3s, FLACs, M4As etc, it will recognize the music 
 
 Picard can be scripted and these are my personal configurations. They do the following:
 
-* Change non-filesystem-friendly chars on filenames into filesystem-friendly ones using Unicode. For example: #➡♯, :➡∶, /➡／, *➡✱ etc
+* Change non-filesystem-friendly chars on filenames into filesystem-friendly ones using Unicode. For example: # → ♯, : → ∶, / →／, * → ✱ etc
 
 * Correctly handle release date versus original release date, number of discs etc
 
