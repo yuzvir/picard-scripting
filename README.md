@@ -12,11 +12,41 @@ Picard can be scripted and these are my personal configurations. They do the fol
 
 ## Folder Structure ##
 
-* (ALBUM_ARTIST | Various Artists)/
-	* (Unofficial* Albums | Live | Singles & EPs | Compilations | Promos | Others)/
-		* ORIGINAL_YEAR - [LABEL]* ALBUM (RELEASE_YEAR)* [RELEASE_INFO] [CATALOG_ID] [AUDIO_QUALITY] {INCOMPLETE}*/
-			* (Disc | CD) DISC_NUMBER - DISC_SUBTITLE/*
-				* TRACK_NUMBER - TRACK_ARTIST - TITLE
+```
+Music
+├─┬ ALBUM_ARTIST_1
+│ ├─┬ Albums
+│ │ ├─┬ ORIGINAL_YEAR - ALBUM (RELEASE_YEAR) [RELEASE_INFO] [CATALOG_ID] [AUDIO_QUALITY] {INCOMPLETE}
+│ │ │ ├─┬ Disc 01 - DISC_SUBTITLE_1
+│ │ │ │ ├── 01 - TRACK_ARTIST - TITLE
+│ │ │ │ ├── 02 - TRACK_ARTIST - TITLE
+│ │ │ │ └── …
+│ │ │ ├── Disc 02 - DISC_SUBTITLE_1
+│ │ │ └── …
+│ │ ├─┬ ORIGINAL_YEAR - ALBUM [RELEASE_INFO] [CATALOG_ID] [AUDIO_QUALITY]
+│ │ │ ├── CD 01 - DISC_SUBTITLE_1
+│ │ │ ├── CD 02 - DISC_SUBTITLE_1
+│ │ │ └── …
+│ │ ├─┬ ORIGINAL_YEAR - ALBUM [RELEASE_INFO] [CATALOG_ID] [AUDIO_QUALITY]
+│ │ │ ├── 01 - TRACK_ARTIST - TITLE
+│ │ │ ├── 02 - TRACK_ARTIST - TITLE
+│ │ │ └── …
+│ │ └── …
+│ ├── Live
+│ ├── Singles & EPs
+│ ├── Compilations
+│ ├── Promos
+│ ├── Unofficial …
+│ └── …
+├── ALBUM_ARTIST_2
+├── …
+└─┬ Various Artists
+  ├─┬ ORIGINAL_YEAR - [LABEL] ALBUM (RELEASE_YEAR) [RELEASE_INFO] [CATALOG_ID] [AUDIO_QUALITY] {INCOMPLETE}
+  │ ├── 01 - TRACK_ARTIST - TITLE
+  │ ├── 02 - TRACK_ARTIST - TITLE
+  │ └── …
+  └── …
+```
 
 Example:
 
@@ -25,12 +55,13 @@ Coil/Albums/2003 - ANS (2004) [CD, Album] [THRESHOLD1] [MP3 256@44k]/CD 01/01 - 
 Notes:
 
 * Release folder (Albums, Live, etc.) wouldn't be created for Various Artists
-* if RELEASETYPE is set to 'bootleg' release folder will be changed to Unoffical Albums, Unoffical Singles & EPs, etc.
-* LABEL will be added only for Various Artists albums
-* RELEASE_YEAR will be added only if it differs from ORIGINAL_YEAR
+* if %releasetype% tag is set to 'bootleg' release folder will be changed to Unoffical Albums, Unoffical Singles & EPs, etc.
+* [LABEL] will be added only for Various Artists albums
+* (RELEASE_YEAR) will be added only if it differs from ORIGINAL_YEAR
 * {INCOMPLETE} will be added only if album doesn't have all tracks
 * DISC_SUBTITLE - will be added only if it exists
-* Disc folder will be created for multidiscs albums
+* Disc folder (Disc ## for Vinyls or CD ## for Compact Discs) will be created only for multidiscs albums
+* AUDIO_QUALITY contains file extension, bitrate and sample rate
 
 
 
