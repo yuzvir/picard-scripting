@@ -148,8 +148,8 @@ $if(%_isBroadcast%,$set(_releaseFolder,%_broadcastSubFolder%))
 $if(%_isOther%,$set(_releaseFolder,%_otherSubFolder%))
 $if(%_isArtistCompil%,$set(_releaseFolder,%_compilationsSubFolder%))
 $if(%_isGlobalCompil%,$set(_releaseFolder,%_compilationsSubFolder%))
-$if($and(%_isBootleg%,%_releaseFolder%),$set(_releaseFolder,%_prefixForUnofficial%%_releaseFolder%))
-$set(_releaseFolder,$if(%_isPromo%,%_promoSubFolder%,%_releaseFolder%))
+$noop(--- $if($and(%_isBootleg%,%_releaseFolder%),$set(_releaseFolder,%_prefixForUnofficial%%_releaseFolder%)) ---)
+$noop(--- $set(_releaseFolder,$if(%_isPromo%,%_promoSubFolder%,%_releaseFolder%)) ---)
 $set(_releaseFolder,$if2(%_releaseFolder%,%_otherSubFolder%))
 $set(_releaseFolder,$if(%_isVarious%,,%_releaseFolder%))
 
@@ -187,6 +187,7 @@ $set(_numOfFiles,$if2(%_totalalbumtracks%,%totaltracks%))
 $set(_mediaType,%_media%)
 
 $if(%_releaseType%,$set(_mediaType,%_mediaType%\, %_releaseType%))
+$if(%_releaseStatus%,$set(_mediaType,%_mediaType%\, %_releaseStatus%))
 $set(_mediaType,$replace(%_mediaType%,;,\,))
 $set(_mediaType,$title(%_mediaType%))
 $set(_mediaType,$trim(%_mediaType%))
@@ -230,3 +231,4 @@ $noop(########## FOLDERS STRUCTURE ####################################)
 %_albumFolder%
 %_discFolderOrEmpty%
 %_fileName%
+
