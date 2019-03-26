@@ -16,7 +16,7 @@ Picard can be scripted and these are my personal configurations. They do the fol
 Music
 ├─┬ ALBUM_ARTIST_1
 │ ├─┬ Albums
-│ │ ├─┬ ORIGINAL_YEAR - ALBUM (RELEASE_YEAR) [RELEASE_INFO] [CATALOG_ID] [AUDIO_QUALITY] {INCOMPLETE}
+│ │ ├─┬ ORIGINAL_YEAR - ALBUM (RELEASE_COMMENT) (RELEASE_YEAR) [RELEASE_INFO] [CATALOG_ID] [AUDIO_QUALITY] {INCOMPLETE}
 │ │ │ ├─┬ Disc 01 - DISC_SUBTITLE_1
 │ │ │ │ ├── 01 - TRACK_ARTIST - TITLE
 │ │ │ │ ├── 02 - TRACK_ARTIST - TITLE
@@ -55,10 +55,10 @@ Coil/Albums/2003 - ANS (2004) [CD, Album] [THRESHOLD1] [MP3 256@44k]/CD 01/01 - 
 Notes:
 
 * Release folder (Albums, Live, etc.) wouldn't be created for Various Artists
-* if %releasetype% tag is set to 'bootleg' release folder will be changed to Unoffical Albums, Unoffical Singles & EPs, etc.
 * [LABEL] will be added only for Various Artists albums
 * (RELEASE_YEAR) will be added only if it differs from ORIGINAL_YEAR
 * {INCOMPLETE} will be added only if album doesn't have all tracks
 * DISC_SUBTITLE - will be added only if it exists
 * Disc folder (Disc ## for Vinyls or CD ## for Compact Discs) will be created only for multidiscs albums
 * AUDIO_QUALITY contains file extension, bitrate and sample rate
+* to be able to use complex medium format such as `4×CD + DVD-Video` you should install `release_format` plugin
