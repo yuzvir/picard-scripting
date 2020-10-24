@@ -5,11 +5,7 @@ opportunity to use %_folderbr% that returns average bitrate for a folder."""
 PLUGIN_VERSION = "0.1"
 PLUGIN_API_VERSIONS = ["0.9.0", "0.10", "0.15", "2.0"]
 
-from picard.metadata import register_album_metadata_processor, register_track_metadata_processor
-from picard.file import register_file_post_load_processor
 from picard.file import register_file_post_addition_to_track_processor
-from picard import log
-import json
 
 BITRATES_ORDER = [
     '64', '128', '160', '192', 'V2', '256', 'V0', '320'
