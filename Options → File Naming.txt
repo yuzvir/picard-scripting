@@ -79,9 +79,10 @@ $if($in($lower(%releasetype%),soundtrack),
   $set(_isSoundTrack,1)
 )
 $noop(★ Detect Incomplete ★)
-$if($eq($is_complete(),0),
-  $set(_isIncomplete,1)
-)
+$noop( -- $if($eq($is_complete(),0), --)
+$noop( --   $set(_isIncomplete,1) --)
+$noop( -- ) --)
+$set(_isIncomplete,$if($is_complete(),,1))
 
 $noop(★ Detect Various Artist ★)
 $if($eq($lower(%albumartist%),various artists),
@@ -164,7 +165,8 @@ $noop(-- $set(_numbr,$div(%_bitrate%,1000)) --)
 $set(_numbr,$left(%_bitrate%,3))
 $if($gte(%_numbr%,220),$set(_folderBitrateV,V0))
 $if($lt(%_numbr%,220),$set(_folderBitrateV,V2))
-$if($eq($upper(%_extension%),MP3),$set(_folderBitrate,$if2(%_folderBitrateC%,%_folderBitrateV%)))
+$noop(-- $if($eq($upper(%_extension%),MP3),$set(_folderBitrate,$if2(%_folderBitrateC%,%_folderBitrateV%))) --)
+$if($eq($upper(%_extension%),MP3),$set(_folderBitrate,%_albumBitrate%))
 
 $set(_sampleRate,$if(%_sample_rate%,$div(%_sample_rate%,1000)))
 $set(_audioQualityPart1,%_folderBitrate%)
@@ -214,6 +216,7 @@ $set(_reIssueYear,$if($ne(%_originalAlbumYear%,%_albumYear%), \(%_albumYear%\)))
 
 $noop(--- album folder structure ---)
 $set(_albumFolder,%_originalAlbumYear% - %_labelTagIfVA%%_albumForFilename%%_releaseInfo%%_reIssueYear% [%_mediaType%] [%_catalogNumber%] [%_audioQuality%]%_incompleteTag%/)
+$set(_albumFolder,$if($eq(%album%,[non-album tracks]),[non-album tracks]/,%_albumFolder%))
 
 $noop(--- disc folder [only for multidiscs releases] ---)
 $set(_discSubtitleOrEmpty,$if(%discsubtitle%, - %_discsubtitleForFilename%))
@@ -226,8 +229,10 @@ $set(_trackNumberPadded,$if(%tracknumber%,$num(%tracknumber%,2)))
 $noop($set(_trackNumber,$if(%_musicbrainz_tracknumber%,%_musicbrainz_tracknumber%,%_trackNumberPadded%)))
 $set(_trackNumber,%_trackNumberPadded%)
 $set(_trackNumberOrEmpty,$if(%_trackNumber%,%_trackNumber% - ))
+$set(_trackNumberOrEmpty,$if($eq(%album%,[non-album tracks]),,%_trackNumberOrEmpty%))
 $set(_artistForFilenameOrEmpty,$if(%_artistForFilename%,%_artistForFilename% - ))
-$set(_fileName,%_trackNumberOrEmpty%%_artistForFilenameOrEmpty%%_titleForFilename%)
+$set(_recordingCommentForFilename,$if(%_recordingCommentForFilename%, \(%_recordingCommentForFilename%\)))
+$set(_fileName,%_trackNumberOrEmpty%%_artistForFilenameOrEmpty%%_titleForFilename%%_recordingCommentForFilename%)
 
 $noop(########## FOLDERS STRUCTURE ####################################)
 
