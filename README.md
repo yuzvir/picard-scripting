@@ -62,3 +62,4 @@ Notes:
 * Disc folder (Disc ## for Vinyls or CD ## for Compact Discs) will be created only for multidiscs albums
 * AUDIO_QUALITY contains file extension, bitrate and sample rate
 * to be able to use complex medium format such as `4×CD + DVD-Video` you should install `release_format` plugin
+* to be able to use aggregated bitrates in place of AUDIO_QUALITY like `V2+V0+320` you should install `album_bitrates` plugin
