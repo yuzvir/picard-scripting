@@ -7,25 +7,33 @@ PLUGIN_API_VERSIONS = ["0.9.0", "0.10", "0.15", "2.0"]
 
 from picard.file import register_file_post_addition_to_track_processor
 
-BITRATES_ORDER = [
-    '64', '128', '160', '192', 'V2', '256', 'V0', '320'
-]
+BITRATES_ORDER = {
+    '64': 0,
+    '128': 1,
+    '160': 2,
+    '192': 3,
+    'V2': 4,
+    '256': 5,
+    'V0': 6,
+    '320': 7
+}
+
+
+CBR_VALUES = {
+    320.0: '320',
+    225.0: '256',
+    192.0: '192',
+    160.0: '160',
+    128.0: '128',
+    64.0: '64',
+}
 
 
 def convert_bitrate(br):
-    if br == 320.0:
-        return '320'
-    elif br == 256.0:
-        return '256'
-    elif br == 192.0:
-        return '192'
-    elif br == 160.0:
-        return '160'
-    elif br == 128.0:
-        return '128'
-    elif br == 64.0:
-        return '64'
-    elif br >= 220.0:
+    cbr = CBR_VALUES.get(br)
+    if cbr:
+        return cbr
+    if br >= 220.0:
         return 'V0'
     elif br < 220.0:
         return 'V2'
@@ -45,10 +53,7 @@ def calculate_album_bitrates(track, file):
     album_bitrates.discard(None)
     if not album_bitrates:
         return
-    sorted_bitrates = []
-    for br in BITRATES_ORDER:
-        if br in album_bitrates:
-            sorted_bitrates.append(br)
+    sorted_bitrates = sorted(album_bitrates, key=BITRATES_ORDER.get)
     album_bitrate = "+".join(sorted_bitrates)
     for album_file in track.album.iterfiles():
         album_file.metadata['~albumBitrate'] = album_bitrate
