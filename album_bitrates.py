@@ -34,7 +34,6 @@ def convert_bitrate(br):
 
 def calculate_album_bitrates(track, file):
     bitrates = []
-    converted_bitrates = []
     for album_file in track.album.iterfiles():
         bitrate = album_file.metadata.get('~bitrate')
         if not bitrate:
@@ -42,7 +41,6 @@ def calculate_album_bitrates(track, file):
         bitrates.append(float(bitrate))
     if not bitrates:
         return
-    average_bitrate = sum(bitrates) / len(bitrates)
     album_bitrates = set(map(convert_bitrate, bitrates))
     album_bitrates.discard(None)
     if not album_bitrates:
